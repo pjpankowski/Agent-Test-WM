@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wealth Agents MVP - Multi-Agent AI Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #0f6ea7;
+            --color-primary-light: #0a8cc5;
+            --color-primary-dark: #084d78;
+            --color-accent: #ff6b35;
+            --color-accent-light: #ff8c5a;
+            --color-success: #10b981;
+            --color-warning: #f59e0b;
+            --color-error: #ef4444;
+            --color-dark: #0f172a;
+            --color-dark-secondary: #1e293b;
+            --color-dark-tertiary: #334155;
+            --color-light: #f8fafc;
+            --color-light-secondary: #e2e8f0;
+            --color-light-tertiary: #cbd5e1;
+            --color-text-primary: #0f172a;
+            --color-text-secondary: #475569;
+            --color-border: #cbd5e1;
+            
+            --font-primary: 'Inter', sans-serif;
+            --font-secondary: 'Merriweather', serif;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+            --shadow-md: 0 4px 6px rgba(15, 23, 42, 0.1);
+            --shadow-lg: 0 10px 15px rgba(15, 23, 42, 0.15);
+            --shadow-xl: 0 20px 25px rgba(15, 23, 42, 0.2);
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2f5 100%);
+            color: var(--color-text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ===== NAVIGATION ===== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(203, 213, 225, 0.1);
+            z-index: 1000;
+            padding: 0 2rem;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        nav a:hover {
+            color: white;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            transition: all 0.3s ease;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            margin-top: 70px;
+            padding: 5rem 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2f5 50%, #dbeafe 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(15, 110, 167, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -5%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: var(--color-dark);
+            font-family: var(--font-secondary);
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--color-text-secondary);
+            margin-bottom: 2rem;
+            line-height: 1.8;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: var(--radius-md);
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-primary);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+            color: white;
+            box-shadow: 0 4px 15px rgba(15, 110, 167, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(15, 110, 167, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(15, 110, 167, 0.05);
+            transform: translateY(-3px);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+            padding-top: 3rem;
+            border-top: 1px solid var(--color-border);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--color-text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* ===== FEATURES GRID ===== */
+        .features-section {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--color-dark);
+            font-family: var(--font-secondary);
+        }
+
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--color-text-secondary);
+            line-height: 1.8;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, white 0%, #f8fafc 100%);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-border);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--color-primary);
+        }
+
+        .feature-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(15, 110, 167, 0.1), rgba(255, 107, 53, 0.1));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            color: var(--color-dark);
+        }
+
+        .feature-card p {
+            color: var(--color-text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ===== AGENTS SHOWCASE ===== */
+        .agents-section {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+        }
+
+        .agents-section .section-header {
+            color: white;
+        }
+
+        .agents-section .section-header h2 {
+            color: white;
+        }
+
+        .agents-section .section-header p {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .agent-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .agent-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--color-primary);
+            transform: translateY(-5px);
+        }
+
+        .agent-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .agent-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: var(--radius-md);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .agent-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .agent-role {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .agent-features {
+            list-style: none;
+        }
+
+        .agent-features li {
+            padding: 0.6rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+        }
+
+        .agent-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--color-success);
+            font-weight: bold;
+        }
+
+        /* ===== TABS DEMO ===== */
+        .tabs-section {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .tabs-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 1rem;
+            border-bottom: 2px solid var(--color-border);
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        .tab-button {
+            padding: 0.8rem 1.5rem;
+            background: none;
+            border: none;
+            font-family: var(--font-primary);
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--color-text-secondary);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            font-size: 0.95rem;
+        }
+
+        .tab-button.active {
+            color: var(--color-primary);
+            border-bottom-color: var(--color-primary);
+        }
+
+        .tab-button:hover {
+            color: var(--color-primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2f5 100%);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+        }
+
+        .metric-label {
+            color: var(--color-text-secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--color-primary);
+        }
+
+        .tab-description {
+            background: rgba(15, 110, 167, 0.05);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--color-primary);
+            margin-top: 2rem;
+        }
+
+        .feature-list {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .feature-list li {
+            padding: 0.8rem 0;
+            padding-left: 1.8rem;
+            position: relative;
+            color: var(--color-text-secondary);
+        }
+
+        .feature-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--color-accent);
+            font-weight: bold;
+        }
+
+        /* ===== DEPLOYMENT OPTIONS ===== */
+        .deployment-section {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #f8fafc 0%, #dbeafe 100%);
+        }
+
+        .deployment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            margin-top: 3rem;
+        }
+
+        .deployment-option {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--color-border);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .deployment-option:hover {
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-5px);
+        }
+
+        .deployment-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+        }
+
+        .deployment-option h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--color-dark);
+        }
+
+        .deployment-time {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--color-text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .deployment-code {
+            background: var(--color-dark);
+            color: white;
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            font-family: 'Monaco', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        /* ===== ROADMAP ===== */
+        .roadmap-section {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .roadmap-timeline {
+            max-width: 1000px;
+            margin: 0 auto;
+            margin-top: 3rem;
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .roadmap-timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--color-primary), var(--color-accent));
+            top: 0;
+        }
+
+        .roadmap-item {
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .roadmap-item:nth-child(odd) {
+            margin-left: 0;
+            margin-right: 52%;
+            text-align: right;
+        }
+
+        .roadmap-item:nth-child(even) {
+            margin-left: 52%;
+            margin-right: 0;
+            text-align: left;
+        }
+
+        .roadmap-dot {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 4px solid var(--color-primary);
+            border-radius: 50%;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 10px;
+            z-index: 1;
+        }
+
+        .roadmap-content {
+            background: linear-gradient(135deg, #f8fafc 0%, #eef2f5 100%);
+            padding: 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--color-border);
+            transition: all 0.3s ease;
+        }
+
+        .roadmap-content:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .roadmap-phase {
+            font-weight: 700;
+            color: var(--color-primary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .roadmap-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--color-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .roadmap-description {
+            color: var(--color-text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .roadmap-timeline::before {
+                left: 20px;
+            }
+
+            .roadmap-item:nth-child(odd),
+            .roadmap-item:nth-child(even) {
+                margin-left: 60px;
+                margin-right: 0;
+                text-align: left;
+            }
+
+            .roadmap-dot {
+                left: 20px;
+            }
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta-section {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            font-family: var(--font-secondary);
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--color-dark);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 3rem 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: white;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+
+            nav {
+                gap: 1rem;
+            }
+
+            .features-grid,
+            .agents-grid,
+            .deployment-options {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs-header {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+            }
+
+            .cta-section h2 {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feature-card,
+        .agent-card,
+        .metric-card {
+            animation: slideInUp 0.6s ease forwards;
+        }
+
+        .feature-card:nth-child(1) { animation-delay: 0.1s; }
+        .feature-card:nth-child(2) { animation-delay: 0.2s; }
+        .feature-card:nth-child(3) { animation-delay: 0.3s; }
+
+        /* Glassmorphism effect */
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <a href="#" class="logo">
+            <div class="logo-icon">🤖</div>
+            <span>Wealth Agents</span>
+        </a>
+        <nav>
+            <a href="#features">Features</a>
+            <a href="#agents">Agents</a>
+            <a href="#deployment">Deploy</a>
+            <a href="#roadmap">Roadmap</a>
+            <a href="#docs" class="nav-cta">Documentation</a>
+        </nav>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Multi-Agent AI for Household Wealth Management</h1>
+            <p>Autonomous agents orchestrate risk management, tax optimization, portfolio allocation, and compliance—delivering institutional-grade wealth analysis in seconds.</p>
+            
+            <div class="hero-cta">
+                <a href="#deployment" class="btn btn-primary">🚀 Deploy Now</a>
+                <a href="#features" class="btn btn-secondary">Learn More</a>
+            </div>
+
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Specialized Agents</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">8s</div>
+                    <div class="stat-label">Analysis Time</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">92%</div>
+                    <div class="stat-label">Avg Confidence</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">∞</div>
+                    <div class="stat-label">Households</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES SECTION -->
+    <section class="features-section" id="features">
+        <div class="section-header">
+            <h2>Unified Household Intelligence</h2>
+            <p>Your wealth platform was missing something. Every advisor needs it. We built it.</p>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Household Aggregation</h3>
+                <p>Combines all accounts (Taxable, 401k, IRA, Roth, 529, HSA) into a single unified household view. No more portfolio silos.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Tax-Aware Analysis</h3>
+                <p>Every metric accounts for tax impact. Tax-loss harvesting identified automatically. Account location optimized across household.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⚠️</div>
+                <h3>Risk Management</h3>
+                <p>VaR, volatility, concentration risk, sector exposure, stress testing. Risk calculated across entire household, not per account.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Smart Allocation</h3>
+                <p>Rebalancing trades suggested automatically. Tax-efficient location strategy for each asset. Long/short opportunities identified.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💧</div>
+                <h3>Liquidity Planning</h3>
+                <p>Cash flow forecasting, emergency fund analysis, liability laddering, stress scenarios. Every household's cash needs understood.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h3>IPS Generation</h3>
+                <p>Dynamic investment policy statements. Risk aversion scored (1-10). Household classified (UHNW/HNW/etc). Ready for client delivery.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- AGENTS SECTION -->
+    <section class="agents-section" id="agents">
+        <div class="section-header">
+            <h2>Five Specialized Agents Working Together</h2>
+            <p>Each agent focuses on one dimension. Collaboration emerges through orchestration.</p>
+        </div>
+
+        <div class="agents-grid">
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-avatar">⚠️</div>
+                    <div>
+                        <div class="agent-name">Risk Manager</div>
+                        <div class="agent-role">Risk Assessment</div>
+                    </div>
+                </div>
+                <ul class="agent-features">
+                    <li>VaR (95%, 99%)</li>
+                    <li>Volatility calculation</li>
+                    <li>Concentration risk</li>
+                    <li>Stress testing</li>
+                    <li>Sharpe ratio analysis</li>
+                </ul>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-avatar">💼</div>
+                    <div>
+                        <div class="agent-name">Investment Manager</div>
+                        <div class="agent-role">Allocation Optimization</div>
+                    </div>
+                </div>
+                <ul class="agent-features">
+                    <li>Allocation drift</li>
+                    <li>Rebalancing trades</li>
+                    <li>Tax location strategy</li>
+                    <li>Long/short analysis</li>
+                    <li>Expected returns</li>
+                </ul>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-avatar">🏦</div>
+                    <div>
+                        <div class="agent-name">Tax Optimizer</div>
+                        <div class="agent-role">Tax Efficiency</div>
+                    </div>
+                </div>
+                <ul class="agent-features">
+                    <li>Tax-loss harvesting</li>
+                    <li>Wash-sale detection</li>
+                    <li>LTCG/STCG tracking</li>
+                    <li>Loss carryforward</li>
+                    <li>Long/short tax impact</li>
+                </ul>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-avatar">💧</div>
+                    <div>
+                        <div class="agent-name">Liquidity Monitor</div>
+                        <div class="agent-role">Cash Flow Analysis</div>
+                    </div>
+                </div>
+                <ul class="agent-features">
+                    <li>Annual cash flows</li>
+                    <li>Emergency fund ratio</li>
+                    <li>Stress scenarios</li>
+                    <li>Liability ladder</li>
+                    <li>Months to cover</li>
+                </ul>
+            </div>
+
+            <div class="agent-card">
+                <div class="agent-header">
+                    <div class="agent-avatar">📋</div>
+                    <div>
+                        <div class="agent-name">IPS Generator</div>
+                        <div class="agent-role">Policy & Governance</div>
+                    </div>
+                </div>
+                <ul class="agent-features">
+                    <li>Risk aversion (1-10)</li>
+                    <li>Classification</li>
+                    <li>Return objectives</li>
+                    <li>Rebalancing triggers</li>
+                    <li>Client reporting</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- TABS DEMO SECTION -->
+    <section class="tabs-section" id="tabs">
+        <div class="tabs-container">
+            <div class="section-header">
+                <h2>Dashboard Experience</h2>
+                <p>Six specialized tabs for comprehensive household analysis.</p>
+            </div>
+
+            <div class="tabs-header">
+                <button class="tab-button active" onclick="switchTab(event, 'dashboard')">📊 Dashboard</button>
+                <button class="tab-button" onclick="switchTab(event, 'risk')">🎯 Risk Analysis</button>
+                <button class="tab-button" onclick="switchTab(event, 'allocation')">💰 Allocation</button>
+                <button class="tab-button" onclick="switchTab(event, 'tax')">🏦 Tax Optimization</button>
+                <button class="tab-button" onclick="switchTab(event, 'liquidity')">💧 Liquidity</button>
+                <button class="tab-button" onclick="switchTab(event, 'ips')">📋 IPS & Governance</button>
+            </div>
+
+            <!-- DASHBOARD TAB -->
+            <div id="dashboard" class="tab-content active">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Total Assets</div>
+                        <div class="metric-value">$2.55M</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Total Liabilities</div>
+                        <div class="metric-value">$850K</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Net Worth</div>
+                        <div class="metric-value">$1.70M</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Risk Profile</div>
+                        <div class="metric-value">Moderate</div>
+                    </div>
+                </div>
+                <div class="tab-description">
+                    <strong>Executive Summary:</strong> Household overview with real-time aggregation across all accounts. Risk profile and consolidated household metrics displayed prominently for advisor review.
+                </div>
+            </div>
+
+            <!-- RISK TAB -->
+            <div id="risk" class="tab-content">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">VaR (95%)</div>
+                        <div class="metric-value">$315K</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Volatility</div>
+                        <div class="metric-value">12.4%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Sharpe Ratio</div>
+                        <div class="metric-value">0.68</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Max Drawdown</div>
+                        <div class="metric-value">-22%</div>
+                    </div>
+                </div>
+                <div class="tab-description">
+                    <strong>Risk Alerts:</strong> Concentration risk identified (AAPL 18%). Allocation drift: +12% equity overweight. Consider rebalancing strategy.
+                </div>
+                <ul class="feature-list">
+                    <li>Portfolio VaR calculated across all accounts</li>
+                    <li>Concentration risk monitoring (>15% positions flagged)</li>
+                    <li>Sector concentration analysis</li>
+                    <li>Stress scenario modeling</li>
+                </ul>
+            </div>
+
+            <!-- ALLOCATION TAB -->
+            <div id="allocation" class="tab-content">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Target Equity</div>
+                        <div class="metric-value">60%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Target Bonds</div>
+                        <div class="metric-value">30%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Target Alternatives</div>
+                        <div class="metric-value">10%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Current Equity</div>
+                        <div class="metric-value">72%</div>
+                    </div>
+                </div>
+                <div class="tab-description">
+                    <strong>Recommendation:</strong> Rebalance $450K from equities to bonds. Move high-yield bonds to tax-deferred accounts for tax efficiency.
+                </div>
+                <ul class="feature-list">
+                    <li>Tax-efficient account location strategy</li>
+                    <li>Specific rebalancing trades with tax impact</li>
+                    <li>Long/short hedging opportunities</li>
+                    <li>Expected return improvement</li>
+                </ul>
+            </div>
+
+            <!-- TAX TAB -->
+            <div id="tax" class="tab-content">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Harvestable Losses</div>
+                        <div class="metric-value">$45K</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Tax Savings</div>
+                        <div class="metric-value">$16.7K</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Opportunities</div>
+                        <div class="metric-value">7</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Wash-Sale Risk</div>
+                        <div class="metric-value">2</div>
+                    </div>
+                </div>
+                <div class="tab-description">
+                    <strong>Action Items:</strong> Execute tax-loss harvesting immediately. Watch for wash-sale violations (30-day window). Consider long/short hedging for tax optimization.
+                </div>
+                <ul class="feature-list">
+                    <li>Tax-loss harvesting opportunities identified</li>
+                    <li>Wash-sale violation detection</li>
+                    <li>LTCG vs STCG optimization</li>
+                    <li>Long/short tax impact modeling</li>
+                </ul>
+            </div>
+
+            <!-- LIQUIDITY TAB -->
+            <div id="liquidity" class="tab-content">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Annual Cash Need</div>
+                        <div class="metric-value">$150K</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Emergency Fund</div>
+                        <div class="metric-value">$600K</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Months Covered</div>
+                        <div class="metric-value">8</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Status</div>
+                        <div class="metric-value">Adequate</div>
+                    </div>
+                </div>
+                <div class="tab-description">
+                    <strong>Liquidity Position:</strong> Stress scenario (market crash -30%): Portfolio sustains 18+ months. Liability maturity ladder well-structured.
+                </div>
+                <ul class="feature-list">
+                    <li>Annual cash flow analysis</li>
+                    <li>Emergency fund adequacy ratio</li>
+                    <li>Stress scenario modeling</li>
+                    <li>Liability maturity ladder</li>
+                </ul>
+            </div>
+
+            <!-- IPS TAB -->
+            <div id="ips" class="tab-content">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Risk Aversion</div>
+                        <div class="metric-value">4.2/10</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Classification</div>
+                        <div class="metric-value">HNW</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Return Target</div>
+                        <div class="metric-value">7.3%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Rebalance Trigger</div>
+                        <div class="metric-value">±5% Drift</div>
+                    </div>
+                </div>
+                <div class="tab-description">
+                    <strong>Investment Policy Statement:</strong> Comprehensive IPS generated dynamically. Risk aversion scored. Household classified. Ready for client delivery (export as JSON).
+                </div>
+                <ul class="feature-list">
+                    <li>Dynamic IPS generation</li>
+                    <li>Risk aversion quantitative scoring</li>
+                    <li>Household classification (UHNW/HNW/etc)</li>
+                    <li>Rebalancing policy & monitoring schedule</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- DEPLOYMENT SECTION -->
+    <section class="deployment-section" id="deployment">
+        <div class="section-header">
+            <h2>Deploy in Minutes</h2>
+            <p>Choose your deployment platform. Live in under 15 minutes.</p>
+        </div>
+
+        <div class="deployment-options">
+            <div class="deployment-option">
+                <div class="deployment-badge">⚡ Fastest</div>
+                <h3>Streamlit Cloud</h3>
+                <div class="deployment-time">⏱️ 2 minutes</div>
+                <p>Best for testing and rapid iteration. Free tier available. Push to GitHub → Deploy → Live.</p>
+                <div class="deployment-code">
+# Step 1: Push to GitHub
+# Step 2: Go to share.streamlit.io
+# Step 3: Create new app
+# Step 4: Done! Live at
+# https://[username]-wealth-agents.streamlit.app
+                </div>
+                <a href="#" class="btn btn-primary">Deploy Now →</a>
+            </div>
+
+            <div class="deployment-option">
+                <div class="deployment-badge">🏆 Production</div>
+                <h3>Render</h3>
+                <div class="deployment-time">⏱️ 5 minutes</div>
+                <p>Production-ready with auto-scaling, monitoring, and persistent storage. Recommended for going live.</p>
+                <div class="deployment-code">
+# 1. Connect GitHub repo to Render
+# 2. Add ANTHROPIC_API_KEY env var
+# 3. Deploy
+# Live at:
+# https://wealth-agents-[random].onrender.com
+                </div>
+                <a href="#" class="btn btn-primary">Deploy Now →</a>
+            </div>
+
+            <div class="deployment-option">
+                <div class="deployment-badge">💻 Local</div>
+                <h3>Local Development</h3>
+                <div class="deployment-time">⏱️ 5 minutes</div>
+                <p>Perfect for development and testing. Full control. All tools configured.</p>
+                <div class="deployment-code">
+pip install -r requirements.txt
+streamlit run wealth_agents_mvp.py
+
+# Opens at localhost:8501
+                </div>
+                <a href="#" class="btn btn-primary">Get Started →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROADMAP SECTION -->
+    <section class="roadmap-section" id="roadmap">
+        <div class="section-header">
+            <h2>Building the Future</h2>
+            <p>Four phases to market leadership in AI-powered wealth management.</p>
+        </div>
+
+        <div class="roadmap-timeline">
+            <div class="roadmap-item">
+                <div class="roadmap-dot"></div>
+                <div class="roadmap-content">
+                    <div class="roadmap-phase">Phase 0 - December 2025</div>
+                    <div class="roadmap-title">MVP Complete ✓</div>
+                    <div class="roadmap-description">5 agents, household aggregation, 6-tab UI, sample data, compliance logging, local + cloud deployment ready.</div>
+                </div>
+            </div>
+
+            <div class="roadmap-item">
+                <div class="roadmap-dot"></div>
+                <div class="roadmap-content">
+                    <div class="roadmap-phase">Phase 1 - Jan/Feb 2026</div>
+                    <div class="roadmap-title">Enterprise Integration</div>
+                    <div class="roadmap-description">Schwab/Fidelity custodian APIs, real-time market data, MSCI Barra integration, 10 beta customers, $150k raised.</div>
+                </div>
+            </div>
+
+            <div class="roadmap-item">
+                <div class="roadmap-dot"></div>
+                <div class="roadmap-content">
+                    <div class="roadmap-phase">Phase 2 - Mar/Apr 2026</div>
+                    <div class="roadmap-title">Advisor Experience</div>
+                    <div class="roadmap-description">Advisor copilot, family office analysis, multi-household optimization, 100+ customers, $2-3M ARR.</div>
+                </div>
+            </div>
+
+            <div class="roadmap-item">
+                <div class="roadmap-dot"></div>
+                <div class="roadmap-content">
+                    <div class="roadmap-phase">Phase 3 - May/Jun 2026</div>
+                    <div class="roadmap-title">Scale & Performance</div>
+                    <div class="roadmap-description">Real-time monitoring, Kubernetes deployment, 10K+ households, 99.9% uptime SLA.</div>
+                </div>
+            </div>
+
+            <div class="roadmap-item">
+                <div class="roadmap-dot"></div>
+                <div class="roadmap-content">
+                    <div class="roadmap-phase">Phase 4 - Jul/Sep 2026</div>
+                    <div class="roadmap-title">AI Intelligence</div>
+                    <div class="roadmap-description">Predictive ML models, behavioral segmentation, autonomous rebalancing, market-leading platform.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA SECTION -->
+    <section class="cta-section">
+        <h2>Ready to Build the Future of Wealth Management?</h2>
+        <p>Deploy the MVP today. Get feedback from advisors this week. Raise seed round next month. Scale to billions in AUM.</p>
+        <div class="cta-buttons">
+            <a href="#deployment" class="btn btn-primary">Deploy MVP Now 🚀</a>
+            <a href="#docs" class="btn btn-secondary">Read Documentation</a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#agents">Agents</a></li>
+                    <li><a href="#deployment">Deployment</a></li>
+                    <li><a href="#roadmap">Roadmap</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Documentation</h4>
+                <ul>
+                    <li><a href="#">Quick Start</a></li>
+                    <li><a href="#">API Reference</a></li>
+                    <li><a href="#">Architecture</a></li>
+                    <li><a href="#">Code Examples</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">GitHub Repository</a></li>
+                    <li><a href="#">Community Discord</a></li>
+                    <li><a href="#">Blog</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Press</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; 2025 Wealth Agents MVP. Built for the future of wealth management. | <a href="#" style="color: rgba(255,255,255,0.7);">Privacy Policy</a> | <a href="#" style="color: rgba(255,255,255,0.7);">Terms of Service</a></p>
+        </div>
+    </footer>
+
+    <script>
+        function switchTab(evt, tabName) {
+            // Hide all tabs
+            const tabs = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+
+            // Remove active from all buttons
+            const buttons = document.getElementsByClassName('tab-button');
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .agent-card, .metric-card, .deployment-option').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
